@@ -40,13 +40,48 @@ devices:
     port:
       - name: T1/1
       - name: T1/2
+  - id: mpls1
+    type: ISP
+    label: mpls_provider
+    port:
+      - name: Tx/x/x
+      - name: Tx/x/1
+  - id: sitesdw1
+    type: sdwan
+    label: ncsitesdw1
+    port:
+      - name: G1/1
+      - name: G1/2
+  - id: lanswth1
+    type: switch
+    label: site_lan
+    port:
+      - name: G1/2
 
 links:
   - src: Internet1
     src_port: Tx/x/x
     dst: ISPR1
-    dst_port: T1/1/1
-    label: Int_link
+    dst_port: T1/1/2
+    label: int_link
+    color: "#FF0000"
+  - src: sitesdw1
+    src_port: G1/1
+    dst: mpls1
+    dst_port: Tx/x/2
+    label: mpls
+    color: "#FF0000"
+  - src: sitesdw1
+    src_port: G1/2
+    dst: lanswth1
+    dst_port: G1/2
+    label: mpls
+    color: "#00FF00"
+  - src: mpls1
+    src_port: Tx/x/x
+    dst: mplsWAN1
+    dst_port: T1/2
+    label: mpls
     color: "#FF0000"
   - src: ISPR1
     src_port: T1/1/2

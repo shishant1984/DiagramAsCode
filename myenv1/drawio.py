@@ -24,6 +24,7 @@ ET.SubElement(root_cell, "mxCell", id="0")
 ET.SubElement(root_cell, "mxCell", id="1", parent="0")
 
 # Add devices
+gap=100
 for device in network_data["devices"]:
     style = cisco_styles.get(device["type"], "shape=rectangle;")
     cell = ET.SubElement(root_cell, "mxCell",
@@ -34,7 +35,7 @@ for device in network_data["devices"]:
                          parent="1",
                          )
     geom = ET.SubElement(cell, "mxGeometry",
-                         x="0", y="0",
+                         x="200", y="200",
                          width="80", height="80")
     geom.set("as", "geometry")
 
