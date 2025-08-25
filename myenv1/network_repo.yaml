@@ -1,0 +1,95 @@
+devices:
+  - id: Internet1
+    type: ISP
+    label: Vz/Lumen/CL
+    port:
+      - name: Tx/x/x
+  - id: sdw1
+    type: sdwan
+    label: cissdw1
+    port:
+      - name: Fo0/2/0
+      - name: Fo0/2/1
+      - name: Fo0/2/2
+  - id: mlsSW1
+    type: switch
+    label: mlsga777a01a01
+    port:
+      - name: T1/52
+      - name: T1/42
+      - name: T1/4
+      - name: T1/1
+      - name: T1/2
+      - name: T1/3
+  - id: ISPR1
+    type: router
+    label: cisga777isp1
+    port:
+      - name: T1/1/1
+      - name: T1/1/2
+  - id: hubFW1
+    type: firewall
+    label: mlsga777hub1
+    port:
+      - name: T1/52
+      - name: T1/1
+      - name: T1/42
+  - id: mplsWAN1
+    type: router
+    label: cisWAN1
+    port:
+      - name: T1/1
+      - name: T1/2
+
+links:
+  - src: Internet1
+    src_port: Tx/x/x
+    dst: ISPR1
+    dst_port: T1/1/1
+    label: Int_link
+    color: "#FF0000"
+  - src: ISPR1
+    src_port: T1/1/2
+    dst: hubFW1
+    dst_port: T1/1
+    label: def_tab(Vlan450)
+    color: "#FF0000"
+  - src: hubFW1
+    src_port: T1/52
+    dst: mlsSW1
+    dst_port: T1/52
+    label: ext_if_FW_mls
+    color: "#FF0000"
+  - src: hubFW1
+    src_port: T1/42
+    dst: mlsSW1
+    dst_port: T1/42
+    label: int_if_FW_mls
+    color: "#00FF00"
+  - src: sdw1
+    src_port: Fo0/2/0
+    dst: mlsSW1
+    dst_port: T1/1
+    label: ae_lan
+    color: "#0000FF"
+  - src: sdw1
+    src_port: Fo0/2/1
+    dst: mlsSW1
+    dst_port: T1/2
+    label: isp
+    color: "#0000FF"
+  - src: sdw1
+    src_port: Fo0/2/2
+    dst: mlsSW1
+    dst_port: T1/3
+    label: mpls
+    color: "#0000FF"
+  - src: mplsWAN1
+    src_port: T1/1
+    dst: mlsSW1
+    dst_port: T1/3
+    label: mlps_link
+    color: "#FF0000"
+
+
+  
