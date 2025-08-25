@@ -54,7 +54,7 @@ for i, link in enumerate(network_data["links"], start=100):
                          parent="1",
                          source=link["src"],
                          target=link["dst"],
-                         style=f"edgeStyle=orthogonalEdgeStyle,endArrow=none;startArrow=none;strokeColor={color};noEdgeStyle=1;orthogonal=1;endArrow=none;endFill=0;strokeWidth=3;rounded=0;curved=0;shape=wire;dashed=1;fontSize=8")
+                         style=f"edgeStyle=orthogonalEdgeStyle;startArrow=none;strokeColor={color};orthogonalLoop=1;jettySize=auto;endArrow=none;endFill=0;strokeWidth=3;rounded=0;shape=wire;dashed=1;fontSize=8;orthogonal=1;")
     geom = ET.SubElement(cell, "mxGeometry", relative="1")
     geom.set("as", "geometry")
     print (port_label)

@@ -4,9 +4,21 @@ devices:
     label: Vz/Lumen/CL
     port:
       - name: Tx/x/x
+  - id: Internet2
+    type: ISP
+    label: Vz/Lumen/CL
+    port:
+      - name: Tx/x/x
   - id: sdw1
     type: sdwan
     label: cissdw1
+    port:
+      - name: Fo0/2/0
+      - name: Fo0/2/1
+      - name: Fo0/2/2
+  - id: sdw2
+    type: sdwan
+    label: cissdw2
     port:
       - name: Fo0/2/0
       - name: Fo0/2/1
@@ -21,9 +33,27 @@ devices:
       - name: T1/1
       - name: T1/2
       - name: T1/3
+      - name: Po100
+  - id: mlsSW2
+    type: switch
+    label: mlsga777a01a02
+    port:
+      - name: T1/52
+      - name: T1/42
+      - name: T1/4
+      - name: T1/1
+      - name: T1/2
+      - name: T1/3
+      - name: Po100
   - id: ISPR1
     type: router
     label: cisga777isp1
+    port:
+      - name: T1/1/1
+      - name: T1/1/2
+  - id: ISPR2
+    type: router
+    label: cisga777isp2
     port:
       - name: T1/1/1
       - name: T1/1/2
@@ -34,13 +64,32 @@ devices:
       - name: T1/52
       - name: T1/1
       - name: T1/42
+  - id: hubFW2
+    type: firewall
+    label: mlsga777hub2
+    port:
+      - name: T1/52
+      - name: T1/1
+      - name: T1/42
   - id: mplsWAN1
     type: router
     label: cisWAN1
     port:
       - name: T1/1
       - name: T1/2
+  - id: mplsWAN2
+    type: router
+    label: cisWAN2
+    port:
+      - name: T1/1
+      - name: T1/2
   - id: mpls1
+    type: ISP
+    label: mpls_provider
+    port:
+      - name: Tx/x/x
+      - name: Tx/x/1
+  - id: mpls2
     type: ISP
     label: mpls_provider
     port:
@@ -52,16 +101,35 @@ devices:
     port:
       - name: G1/1
       - name: G1/2
-  - id: lanswth1
+  - id: sitesdw2
+    type: sdwan
+    label: ncsitesdw2
+    port:
+      - name: G1/1
+      - name: G1/2
+  - id: lan_swh1
     type: switch
-    label: site_lan
+    label: core1
     port:
       - name: G1/2
+      - name: Po100
+  - id: lan_swh2
+    type: switch
+    label: core2
+    port:
+      - name: G1/2
+      - name: Po100
 
 links:
   - src: Internet1
     src_port: Tx/x/x
     dst: ISPR1
+    dst_port: T1/1/2
+    label: int_link
+    color: "#FF0000"
+  - src: Internet2
+    src_port: Tx/x/x
+    dst: ISPR2
     dst_port: T1/1/2
     label: int_link
     color: "#FF0000"
@@ -71,15 +139,33 @@ links:
     dst_port: Tx/x/2
     label: mpls
     color: "#FF0000"
+  - src: sitesdw2
+    src_port: G1/1
+    dst: mpls2
+    dst_port: Tx/x/2
+    label: mpls
+    color: "#FF0000"
   - src: sitesdw1
     src_port: G1/2
-    dst: lanswth1
+    dst: lan_swh1
     dst_port: G1/2
-    label: mpls
+    label: lan
+    color: "#00FF00"
+  - src: sitesdw2
+    src_port: G1/2
+    dst: lan_swh2
+    dst_port: G1/2
+    label: lan
     color: "#00FF00"
   - src: mpls1
     src_port: Tx/x/x
     dst: mplsWAN1
+    dst_port: T1/2
+    label: mpls
+    color: "#FF0000"
+  - src: mpls2
+    src_port: Tx/x/x
+    dst: mplsWAN2
     dst_port: T1/2
     label: mpls
     color: "#FF0000"
@@ -89,9 +175,21 @@ links:
     dst_port: T1/1
     label: def_tab(Vlan450)
     color: "#FF0000"
+  - src: ISPR2
+    src_port: T1/1/2
+    dst: hubFW2
+    dst_port: T1/1
+    label: def_tab(Vlan450)
+    color: "#FF0000"
   - src: hubFW1
     src_port: T1/52
     dst: mlsSW1
+    dst_port: T1/52
+    label: ext_if_FW_mls
+    color: "#FF0000"
+  - src: hubFW2
+    src_port: T1/52
+    dst: mlsSW2
     dst_port: T1/52
     label: ext_if_FW_mls
     color: "#FF0000"
@@ -101,9 +199,21 @@ links:
     dst_port: T1/42
     label: int_if_FW_mls
     color: "#00FF00"
+  - src: hubFW2
+    src_port: T1/42
+    dst: mlsSW2
+    dst_port: T1/42
+    label: int_if_FW_mls
+    color: "#00FF00"
   - src: sdw1
     src_port: Fo0/2/0
     dst: mlsSW1
+    dst_port: T1/1
+    label: ae_lan
+    color: "#0000FF"
+  - src: sdw2
+    src_port: Fo0/2/0
+    dst: mlsSW2
     dst_port: T1/1
     label: ae_lan
     color: "#0000FF"
@@ -119,12 +229,39 @@ links:
     dst_port: T1/3
     label: mpls
     color: "#0000FF"
+  - src: sdw2
+    src_port: Fo0/2/1
+    dst: mlsSW2
+    dst_port: T1/2
+    label: isp
+    color: "#0000FF"
+  - src: sdw2
+    src_port: Fo0/2/2
+    dst: mlsSW2
+    dst_port: T1/3
+    label: mpls
+    color: "#0000FF"
   - src: mplsWAN1
     src_port: T1/1
     dst: mlsSW1
     dst_port: T1/3
     label: mlps_link
     color: "#FF0000"
-
-
-  
+  - src: mplsWAN2
+    src_port: T1/1
+    dst: mlsSW2
+    dst_port: T1/3
+    label: mlps_link
+    color: "#FF0000"
+  - src: mlsSW1
+    src_port: Po100
+    dst: mlsSW2
+    dst_port: Po100
+    label: connect
+    color: "#00FF00"
+  - src: core1
+    src_port: Po100
+    dst: core2
+    dst_port: Po100
+    label: connect
+    color: "#00FF00"
