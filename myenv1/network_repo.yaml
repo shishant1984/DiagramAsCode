@@ -113,14 +113,34 @@ devices:
     port:
       - name: G1/2
       - name: Po100
+      - name: G1/3
   - id: lan_swh2
     type: switch
     label: core2
     port:
       - name: G1/2
       - name: Po100
+      - name: G1/3
+  - id: rectanleLAN
+    type: lan
+    label: users_server
+    port: 
+      - name: user_servers
+      - name: user_servers
 
 links:
+  - src: rectanleLAN
+    src_port: user_servers
+    dst: lan_swh1
+    dst_port: G1/3
+    label: LAN
+    color: "#00FF00"
+  - src: rectanleLAN
+    src_port: user_servers
+    dst: lan_swh2
+    dst_port: G1/3
+    label: LAN
+    color: "#00FF00"
   - src: Internet1
     src_port: Tx/x/x
     dst: ISPR1
@@ -210,13 +230,13 @@ links:
     dst: mlsSW1
     dst_port: T1/1
     label: ae_lan
-    color: "#0000FF"
+    color: "#00FF00"
   - src: sdw2
     src_port: Fo0/2/0
     dst: mlsSW2
     dst_port: T1/1
     label: ae_lan
-    color: "#0000FF"
+    color: "#00FF00"
   - src: sdw1
     src_port: Fo0/2/1
     dst: mlsSW1
@@ -257,11 +277,11 @@ links:
     src_port: Po100
     dst: mlsSW2
     dst_port: Po100
-    label: connect
+    label: ISL
     color: "#00FF00"
-  - src: core1
+  - src: lan_swh2
     src_port: Po100
-    dst: core2
+    dst: lan_swh1
     dst_port: Po100
-    label: connect
+    label: ISL
     color: "#00FF00"
